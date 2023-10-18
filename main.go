@@ -17,22 +17,22 @@ const OCTDIGITS = "01234567"
 const PUNCTUATION = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"
 const PRINTTABLE = DIGITS + ASCII_LETTERS + PUNCTUATION + WHITESPACE
 
-func str(value any) string {
+func Str(value any) string {
 	return fmt.Sprintf("%v", value)
 }
-func split(value string) []string {
+func Split(value string) []string {
 	return strings.Split(value, "")
 }
 
-func split_by_sep(value string, sep string) []string {
+func Split_by_sep(value string, sep string) []string {
 	return strings.Split(value, sep)
 }
 
-func split_by_sep_max(value string, sep string, max int) []string {
+func Split_by_sep_max(value string, sep string, max int) []string {
 	return strings.SplitN(value, sep, max)
 }
 
-func strip(value string, chars ...string) string {
+func Strip(value string, chars ...string) string {
 	if len(chars) == 0 {
 		return strings.TrimSpace(value)
 	} else {
@@ -44,10 +44,10 @@ func strip(value string, chars ...string) string {
 
 }
 
-func integer(value any) int {
-	value = str(value)
-	value = strip(value.(string))
-	intValue, err := strconv.Atoi(str(value))
+func Integer(value any) int {
+	value = Str(value)
+	value = Strip(value.(string))
+	intValue, err := strconv.Atoi(Str(value))
 	if err != nil {
 		panic(err)
 	} else {
@@ -55,15 +55,15 @@ func integer(value any) int {
 	}
 }
 
-func print(values ...any) {
+func Print(values ...any) {
 	for _, value := range values {
-		value = str(value) + " "
+		value = Str(value) + " "
 		fmt.Print(value)
 	}
 	fmt.Println()
 }
 
-func input(__prompt ...string) string {
+func Input(__prompt ...string) string {
 	var prompt string
 	var value string
 	if len(__prompt) == 0 {
@@ -76,7 +76,7 @@ func input(__prompt ...string) string {
 	return value
 }
 
-func includes[T comparable](findItem T, slice []T) bool {
+func Includes[T comparable](findItem T, slice []T) bool {
 	for _, el := range slice {
 		if el == findItem {
 			return true
@@ -85,14 +85,14 @@ func includes[T comparable](findItem T, slice []T) bool {
 	return false
 }
 
-func vtype(value any) string {
+func Type(value any) string {
 	return reflect.TypeOf(value).String()
 }
 
-func float(value any) float64 {
-	value = str(value)
-	value = strip(value.(string))
-	float64Value, err := strconv.ParseFloat(str(value), 64)
+func Float(value any) float64 {
+	value = Str(value)
+	value = Strip(value.(string))
+	float64Value, err := strconv.ParseFloat(Str(value), 64)
 	if err != nil {
 		panic(err)
 	} else {
@@ -100,27 +100,27 @@ func float(value any) float64 {
 	}
 }
 
-func lower(value string) string {
+func Lower(value string) string {
 	return strings.ToLower(value)
 }
 
-func upper(value string) string {
+func Upper(value string) string {
 	return strings.ToUpper(value)
 }
 
-func join(slice ...any) string {
+func Join(slice ...any) string {
 	result := ""
 	for _, el := range slice {
-		result = result + str(el)
+		result = result + Str(el)
 	}
 	return result
 }
 
-func encode(value string) []byte {
+func Encode(value string) []byte {
 	return []byte(value)
 }
 
-func decode(value []byte) string {
+func Decode(value []byte) string {
 	return string(value)
 }
 
