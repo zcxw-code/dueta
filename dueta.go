@@ -1,7 +1,13 @@
-package dueta
+package main
 
 import (
+	"errors"
 	"fmt"
+	"os"
+	"path/filepath"
+	"slices"
+
+	// "path/filepath"
 	"reflect"
 	"strconv"
 	"strings"
@@ -76,13 +82,14 @@ func Input(__prompt ...string) string {
 	return value
 }
 
-func Includes[T comparable](findItem T, slice []T) bool {
-	for _, el := range slice {
-		if el == findItem {
-			return true
-		}
+func Includes(findItem any, slice any) bool {
+	if Type(slice) == "string" {
+		findItem = Str(findItem)
+		return strings.Contains(slice.(string), findItem.(string))
+	} else {
+		return slices.Contains(slice.([]any), findItem)
 	}
-	return false
+
 }
 
 func Type(value any) string {
@@ -124,3 +131,80 @@ func Decode(value []byte) string {
 	return string(value)
 }
 
+func Exists_path(path string) bool {
+	if _, err := os.Stat(path); errors.Is(err, os.ErrNotExist) {
+		return false
+	} else {
+		return true
+	}
+}
+
+func Makedirs(path string) {
+
+	path_tmp := Get_root_dir(path)
+	for _, dir := range Split_path(path)[1:] {
+		os.MkdirAll(path, os.ModePerm)
+		path_tmp = path_tmp + "/" + dir
+	}
+}
+
+func Get_root_dir(path string) string {
+	path = filepath.FromSlash(path)
+	sep := string(filepath.Separator)
+	if Includes("://", path) {
+		root_2 := Split_by_sep(path, sep)[1:][1]
+		root_1 := Split_by_sep(path, "://")[0]
+		root := root_1 + "://" + root_2
+		return root
+	} else {
+		root_1 := Split_by_sep(path, "/")[0]
+		root_2 := Split_by_sep(path, "/")[1]
+		root := root_1 + "/" + root_2
+		return root
+	}
+}
+
+func Split_path(path string) []string {
+	path = filepath.FromSlash(path)
+	sep := string(filepath.Separator)
+	if Includes("://", path) {
+		root_2 := Split_by_sep(path, sep)[1:][1]
+		root_1 := Split_by_sep(path, "://")[0]
+		root := root_1 + "://" + root_2
+		paths := Split_by_sep(path, "/")[3:]
+		data := []string{root}
+		data = append(data, paths...)
+		return data
+	} else {
+		root_1 := Split_by_sep(path, "/")[0]
+		root_2 := Split_by_sep(path, "/")[1]
+		root := root_1 + "/" + root_2
+		paths := Split_by_sep(path, "/")[2:]
+		data := []string{root}
+		data = append(data, paths...)
+		return data
+	}
+
+}
+
+func Startswith(findValue string, value string) bool {
+	return strings.HasPrefix(value, findValue)
+}
+func Endswith(findValue string, value string) bool {
+	return strings.HasSuffix(value, findValue)
+}
+func open(path string, mode string, custom ...any) *os.File {
+	var flags = os.O_CREATE
+
+	if Startswith("a", mode) {
+		flags = flags | os.O_APPEND
+	} else if Startswith("w", mode) {
+		flags = flags | os.O_WRONLY
+	} else if Startswith("r", mode) {
+		flags = flags | os.O_RDONLY
+	}
+
+	fp, _ := os.OpenFile(path, flags, 755)
+	return fp
+
+}
