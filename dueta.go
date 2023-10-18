@@ -193,7 +193,7 @@ func Startswith(findValue string, value string) bool {
 func Endswith(findValue string, value string) bool {
 	return strings.HasSuffix(value, findValue)
 }
-func open(path string, mode string, custom ...any) *os.File {
+func Open(path string, mode string, custom ...any) *os.File {
 	var flags = os.O_CREATE
 
 	if Startswith("a", mode) {
