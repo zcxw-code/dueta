@@ -108,10 +108,10 @@ func Upper(value string) string {
 	return strings.ToUpper(value)
 }
 
-func Join(slice ...any) string {
+func Join(step string, slice ...any) string {
 	result := ""
 	for _, el := range slice {
-		result = result + Str(el)
+		result = result + step + Str(el)
 	}
 	return result
 }
